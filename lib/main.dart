@@ -51,7 +51,6 @@ class _TelaBoasVindasState extends State<TelaBoasVindas> {
   @override
   void initState() {
     super.initState();
-    // Inicia o carregamento do banco de dados assim que o app abre
     _carregarTarefasFuture = Provider.of<TarefaProvider>(context, listen: false).carregarTarefas();
   }
 
@@ -84,7 +83,6 @@ class _TelaBoasVindasState extends State<TelaBoasVindas> {
                       ),
                       const SizedBox(height: 40),
                       
-                      // Requisito 7: Mostrar título e data da tarefa mais perto de vencer
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -115,7 +113,6 @@ class _TelaBoasVindasState extends State<TelaBoasVindas> {
                           textStyle: const TextStyle(fontSize: 20),
                         ),
                         onPressed: () {
-                          // Navega para a lista e substitui a tela atual para não voltar para as boas-vindas com o botão "voltar" do celular
                           Navigator.pushReplacementNamed(context, Rotas.telaLista);
                         },
                         child: const Text("Entrar"),

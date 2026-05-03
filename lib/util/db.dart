@@ -21,7 +21,7 @@ class DBUtil {
             dataPrevista TEXT NOT NULL,
             importante INTEGER NOT NULL,
             realizada INTEGER NOT NULL,
-            categoria TEXT NOT NULL
+            recompensa TEXT NOT NULL
           )
         ''');
       },
@@ -47,7 +47,6 @@ class DBUtil {
     );
   }
 
-  // Novo método obrigatório para edição
   static Future<int> update(String table, Model model) async {
     final db = await _getDB();
     return await db.update(

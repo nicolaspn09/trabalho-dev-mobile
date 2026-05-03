@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:trabalho/models/tarefa.dart';
 import 'package:trabalho/providers/tarefa_provider.dart';
 import 'package:trabalho/util/rotas.dart';
+import 'package:trabalho/componentes/tarefa_card.dart';
 
 class TelaLista extends StatelessWidget {
   const TelaLista({super.key});
@@ -10,7 +11,7 @@ class TelaLista extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Minhas Tarefas'),
@@ -18,10 +19,12 @@ class TelaLista extends StatelessWidget {
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
-              Tab(icon: Icon(Icons.list), text: "Todas"),
-              Tab(icon: Icon(Icons.star), text: "Importantes"),
-              Tab(icon: Icon(Icons.warning), text: "Atrasadas"),
-              Tab(icon: Icon(Icons.done_all), text: "Realizadas"),
+              Tab(text: "Importantes"),
+              Tab(text: "Não Importantes"),
+              Tab(text: "Realizadas"),
+              Tab(text: "Não Realizadas"),
+              Tab(text: "Atrasadas"),
+              Tab(text: "No Prazo"),
             ],
           ),
         ),
@@ -29,10 +32,12 @@ class TelaLista extends StatelessWidget {
           builder: (context, provider, child) {
             return TabBarView(
               children: [
-                _buildLista(provider.tarefas, context),
                 _buildLista(provider.importantes, context),
-                _buildLista(provider.atrasadas, context),
+                _buildLista(provider.naoImportantes, context),
                 _buildLista(provider.realizadas, context),
+                _buildLista(provider.naoRealizadas, context),
+                _buildLista(provider.atrasadas, context),
+                _buildLista(provider.noPrazo, context),
               ],
             );
           },
@@ -45,7 +50,6 @@ class TelaLista extends StatelessWidget {
     );
   }
 
-  // Componente reutilizável exigido no requisito 9
   Widget _buildLista(List<Tarefa> lista, BuildContext context) {
     if (lista.isEmpty) {
       return const Center(child: Text("Nenhuma tarefa encontrada."));
@@ -53,25 +57,7 @@ class TelaLista extends StatelessWidget {
     return ListView.builder(
       itemCount: lista.length,
       itemBuilder: (ctx, i) {
-        final tarefa = lista[i];
-        return Card(
-          elevation: 2,
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: ListTile(
-            title: Text(tarefa.titulo),
-            subtitle: Text("Vence em: ${tarefa.dataPrevista}\nCategoria: ${tarefa.categoria}"),
-            // Requisito 2: Não mostra ID nem descrição aqui
-            leading: Icon(
-              tarefa.realizada ? Icons.check_circle : Icons.circle_outlined,
-              color: tarefa.realizada ? Colors.green : Colors.grey,
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () => Navigator.pushNamed(context, Rotas.telaForm, arguments: tarefa),
-            ),
-            onTap: () => Navigator.pushNamed(context, Rotas.telaDetalhes, arguments: tarefa),
-          ),
-        );
+        return TarefaCard(tarefa: lista[i]);
       },
     );
   }

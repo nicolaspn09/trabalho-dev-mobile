@@ -21,7 +21,6 @@ class TelaDetalhes extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Requisito 2: ID e descrição mostrados APENAS aqui
             Text("ID da Tarefa: ${tarefa.id}", style: const TextStyle(fontSize: 16, color: Colors.grey)),
             const SizedBox(height: 10),
             Text(tarefa.titulo, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
@@ -29,14 +28,13 @@ class TelaDetalhes extends StatelessWidget {
             Text("Descrição:", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             Text(tarefa.descricao.isEmpty ? "Sem descrição." : tarefa.descricao, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
-            Text("Categoria: ${tarefa.categoria}", style: const TextStyle(fontSize: 16)),
+            Text("Recompensa: ${tarefa.recompensa}", style: const TextStyle(fontSize: 16)),
             Text("Vencimento: ${tarefa.dataPrevista}", style: const TextStyle(fontSize: 16)),
             Text(
               tarefa.importante ? "⚠️ Tarefa Importante" : "Tarefa Normal",
               style: TextStyle(fontSize: 16, color: tarefa.importante ? Colors.orange : Colors.black),
             ),
             const Spacer(),
-            // Requisito 2 e 4: Realizar a tarefa apenas nesta tela
             Center(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(

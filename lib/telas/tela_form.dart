@@ -13,7 +13,7 @@ class TelaForm extends StatefulWidget {
 class _TelaFormState extends State<TelaForm> {
   final _tituloController = TextEditingController();
   final _descController = TextEditingController();
-  final _catController = TextEditingController();
+  final _recompensaController = TextEditingController();
   DateTime? _dataSelecionada;
   bool _importante = false;
   
@@ -29,7 +29,7 @@ class _TelaFormState extends State<TelaForm> {
         _tarefaEditada = arg as Tarefa;
         _tituloController.text = _tarefaEditada!.titulo;
         _descController.text = _tarefaEditada!.descricao;
-        _catController.text = _tarefaEditada!.categoria;
+        _recompensaController.text = _tarefaEditada!.recompensa;
         _importante = _tarefaEditada!.importante;
         if (_tarefaEditada!.dataPrevista.isNotEmpty) {
           _dataSelecionada = DateTime.parse(_tarefaEditada!.dataPrevista);
@@ -66,8 +66,8 @@ class _TelaFormState extends State<TelaForm> {
     if (_tarefaEditada != null) {
       // Atualização
       _tarefaEditada!.titulo = _tituloController.text;
-      _tarefaEditada!.descricao = _descController.text; // Regra 4: pode editar os outros campos
-      _tarefaEditada!.categoria = _catController.text;
+      _tarefaEditada!.descricao = _descController.text;
+      _tarefaEditada!.recompensa = _recompensaController.text;
       _tarefaEditada!.dataPrevista = dataIso;
       _tarefaEditada!.importante = _importante;
       Provider.of<TarefaProvider>(context, listen: false).updateTarefa(_tarefaEditada!);
@@ -76,10 +76,10 @@ class _TelaFormState extends State<TelaForm> {
       final novaTarefa = Tarefa(
         titulo: _tituloController.text,
         descricao: _descController.text,
-        categoria: _catController.text,
+        recompensa: _recompensaController.text,
         dataPrevista: dataIso,
         importante: _importante,
-        realizada: false, // Regra 4/2: Não pode realizar na criação/edição
+        realizada: false,
       );
       Provider.of<TarefaProvider>(context, listen: false).addTarefa(novaTarefa);
     }
@@ -104,7 +104,7 @@ class _TelaFormState extends State<TelaForm> {
               maxLines: 3,
             ),
             TextField(
-              controller: _catController,
+              controller: _recompensaController,
               decoration: const InputDecoration(labelText: 'Categoria'),
             ),
             SwitchListTile(
