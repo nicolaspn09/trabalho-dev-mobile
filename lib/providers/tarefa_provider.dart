@@ -7,32 +7,37 @@ class TarefaProvider with ChangeNotifier {
 
   List<Tarefa> get tarefas => [..._tarefas];
 
-  // 1. Importantes ou não
-  List<Tarefa> get importantes => _tarefas.where((t) => t.importante).toList();
-  List<Tarefa> get naoImportantes => _tarefas.where((t) => !t.importante).toList();
+  List<Tarefa> _ordenarPorData(List<Tarefa> lista) {
+    lista.sort((a, b) {
+      if (a.dataPrevista.isEmpty) return 1;
+      if (b.dataPrevista.isEmpty) return -1;
+      return DateTime.parse(a.dataPrevista).compareTo(DateTime.parse(b.dataPrevista));
+    });
+    return lista;
+  }
 
-  // 2. Realizadas ou não
-  List<Tarefa> get realizadas => _tarefas.where((t) => t.realizada).toList();
-  List<Tarefa> get naoRealizadas => _tarefas.where((t) => !t.realizada).toList();
+  List<Tarefa> get importantes => _ordenarPorData(_tarefas.where((t) => t.importante).toList());
+  List<Tarefa> get naoImportantes => _ordenarPorData(_tarefas.where((t) => !t.importante).toList());
 
-  // 3. Atrasadas ou não (comparando apenas datas sem as horas)
+  List<Tarefa> get realizadas => _ordenarPorData(_tarefas.where((t) => t.realizada).toList());
+  List<Tarefa> get naoRealizadas => _ordenarPorData(_tarefas.where((t) => !t.realizada).toList());
+
   List<Tarefa> get atrasadas {
     final hoje = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    return _tarefas.where((t) {
+    return _ordenarPorData(_tarefas.where((t) {
       if (t.realizada || t.dataPrevista.isEmpty) return false;
       return DateTime.parse(t.dataPrevista).isBefore(hoje);
-    }).toList();
+    }).toList());
   }
 
   List<Tarefa> get noPrazo {
     final hoje = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    return _tarefas.where((t) {
+    return _ordenarPorData(_tarefas.where((t) {
       if (t.realizada || t.dataPrevista.isEmpty) return false;
       return !DateTime.parse(t.dataPrevista).isBefore(hoje); 
-    }).toList();
+    }).toList());
   }
 
-  // Busca a tarefa mais próxima de vencer (para a tela inicial)
   Tarefa? get proximaAVencer {
     final pendentes = _tarefas.where((t) => !t.realizada && t.dataPrevista.isNotEmpty).toList();
     if (pendentes.isEmpty) return null;
@@ -49,7 +54,7 @@ class TarefaProvider with ChangeNotifier {
 
   Future<void> addTarefa(Tarefa tarefa) async {
     await DBUtil.insert(DBUtil.tableTarefas, tarefa);
-    await carregarTarefas(); // Recarrega para pegar o ID gerado pelo banco
+    await carregarTarefas();
   }
 
   Future<void> updateTarefa(Tarefa tarefa) async {
